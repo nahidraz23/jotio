@@ -11,7 +11,7 @@ const dbPass = process.env.DB_PASS;
 async function main() {
   try {
     await mongoose.connect(
-      `mongodb+srv://${dbUser}:${dbPass}@cluster0.yzsgyep.mongodb.net/?appName=Cluster0`
+      `mongodb+srv://${dbUser}:${dbPass}@cluster0.yzsgyep.mongodb.net/jotio?appName=Cluster0`
     );
     console.log("Connected to mongoDB using moongose");
     server = app.listen(port, () => {
