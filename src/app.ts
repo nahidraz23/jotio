@@ -24,7 +24,12 @@ const noteSchema = new Schema({
         label: {type: String, required: true},
         color: {type: String, default: 'gray'}
     }
-})
+},
+{
+    versionKey: false,
+    timestamps: true
+}
+)
 
 const Note = model('Note', noteSchema)
 
@@ -78,6 +83,33 @@ app.post('/notes/create-note', async (req: Request, res: Response) => {
         message: 'Note create successfully',
         note
     })
+})
+
+app.patch('/notes/:noteId', async (req: Request, res: Response) => {
+    const noteId = req.params.noteId;
+    const updatedBody = req.body;
+    const note = await Note.findByIdAndUpdate(noteId, updatedBody, {new: true});
+    // const note = await Note.findOneAndUpdate({_id: noteId}, updatedBody, {new: true});
+    // const note = await Note.updateOne({_id: noteId}, updatedBody, {new: true});
+
+    res.status(201).json({
+        success: true,
+        message: "Note updated successfully!!!",
+        note
+    })
+})
+
+app.delete('/notes/:noteId', async (req: Request, res: Response) => {
+    const noteId = req.params.noteId;
+
+    const note = await Note.findByIdAndDelete(noteId);
+
+    res.status(201).json({
+        success: true,
+        message: "Note deleted successfully!!!",
+        note
+    })
+
 })
 
 app.get('/', (req: Request, res: Response) => {
