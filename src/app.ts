@@ -4,9 +4,20 @@ import { model, Schema } from 'mongoose';
 const app: Application = express();
 
 const noteSchema = new Schema({
-    title: String,
-    content: String,
+    // title: String,
+    title: {type: String, required: true, trim: true}, // trim will remove extra white spaces "           Hello World        "
+    // content: String,
+    content: {type: String, default: ''},
     // publishDate: Number,
+    category: {
+        type: String,
+        enum: ['personal', 'work', 'study', 'other'],
+        default: 'personal'
+    },
+    pinned: {
+        type: Boolean,
+        default: false
+    }
 })
 
 const Note = model('Note', noteSchema)
@@ -14,9 +25,10 @@ const Note = model('Note', noteSchema)
 app.post('/create-note', async (req: Request, res: Response) => {
     const myNote = new Note ({
         title: 'Learning Mongoose',
-        content: 'I am learning Mongoose',
+        // content: 'I am learning Mongoose',
         // content: true,
         // publishDate: 'Hello World'
+        
     })
 
     await myNote.save();
