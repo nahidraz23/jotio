@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose"
+import { INote } from "../interfaces/note.interface"
 
-const noteSchema = new Schema({
+const noteSchema = new Schema <INote>({
     // title: String,
     title: {type: String, required: true, trim: true}, // trim will remove extra white spaces "           Hello World        "
     // content: String,
