@@ -43,15 +43,24 @@ userRoutes.post("/create-user", async (req: Request, res: Response) => {
 
     // const password = bcrypt.hash(req.body.password, "10")
 
-    // const user = await User.create(body);
+    
+    // Built in and custom instance methods
+    
+    // const user = new User(body);
+    
+    // const password = await user.hashPassword(body.password)
+    
+    // user.password = password;
+    
+    // await user.save();
+    
+    // Build in and custom static methods
+    
+    // const password = await User.hashPassword(body.password);
 
-    const user = new User(body);
+    // body.password = password
 
-    const password = await user.hashPassword(body.password)
-
-    user.password = password;
-
-    await user.save();
+    const user = await User.create(body);
 
     res.status(201).json({
       success: true,

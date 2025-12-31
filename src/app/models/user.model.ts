@@ -3,6 +3,7 @@ import {
   IAddress,
   IUser,
   UserInstanceMethods,
+  UserStaticMethods,
 } from "../interfaces/user.interface";
 import bcrypt from "bcryptjs";
 
@@ -17,7 +18,7 @@ const addressSchema = new Schema<IAddress>(
   }
 );
 
-const userSchema = new Schema<IUser, Model<IUser>, UserInstanceMethods>(
+const userSchema = new Schema<IUser, UserStaticMethods, UserInstanceMethods>(
   {
     email: {
       type: String,
@@ -80,4 +81,17 @@ userSchema.method("hashPassword", async function (plainPassword: string) {
   return password;
 });
 
-export const User = model("User", userSchema);
+userSchema.static("hashPassword", async function (plainPassword: string) {
+  const password = await bcrypt.hash(plainPassword, 10);
+  return password;
+});
+
+userSchema.pre('save', async function(){
+    this.password = await bcrypt.hash(this.password, 10);
+})
+
+userSchema.post('save', function(doc) {
+     console.log(`${doc.email} has been saved`);
+})
+
+export const User = model<IUser, UserStaticMethods>("User", userSchema);
