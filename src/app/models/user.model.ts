@@ -6,6 +6,7 @@ import {
   UserStaticMethods,
 } from "../interfaces/user.interface";
 import bcrypt from "bcryptjs";
+import { Note } from "./notes.model";
 
 const addressSchema = new Schema<IAddress>(
   {
@@ -86,12 +87,32 @@ userSchema.static("hashPassword", async function (plainPassword: string) {
   return password;
 });
 
-userSchema.pre('save', async function(){
-    this.password = await bcrypt.hash(this.password, 10);
-})
+// Pre hook and post hook middleware
 
-userSchema.post('save', function(doc) {
-     console.log(`${doc.email} has been saved`);
-})
+// pre hook - document middleware
+userSchema.pre("save", async function (next: any) {
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+// pre hook - query middleware
+userSchema.pre("find", function (doc) {
+  console.log(doc);
+//   next()
+});
+
+// post hook - query middleware
+userSchema.post("findOneAndDelete", async function (doc, next) {
+  if (doc) {
+    await Note.deleteMany({ user: doc._id });
+  }
+  next();
+});
+
+// post hook - query middleware
+userSchema.post("save", function (doc, next) {
+  console.log(`${doc.email} has been saved`);
+  next();
+});
 
 export const User = model<IUser, UserStaticMethods>("User", userSchema);
