@@ -74,6 +74,8 @@ const userSchema = new Schema<IUser, UserStaticMethods, UserInstanceMethods>(
   {
     versionKey: false,
     timestamps: true,
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true}
   }
 );
 
@@ -114,5 +116,9 @@ userSchema.post("save", function (doc, next) {
   console.log(`${doc.email} has been saved`);
   next();
 });
+
+userSchema.virtual('fullName').get(function(){
+    return `${this.firstName} ${this.lastName}`
+})
 
 export const User = model<IUser, UserStaticMethods>("User", userSchema);
