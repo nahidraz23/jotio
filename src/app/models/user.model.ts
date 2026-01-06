@@ -47,7 +47,7 @@ const userSchema = new Schema<IUser, UserStaticMethods, UserInstanceMethods>(
       type: String,
       required: true,
       trim: true,
-      minLength: [5, "Last name should be minimum 5 charecters long"],
+      minLength: [3, "Last name should be minimum 5 charecters long"],
       maxLength: 10,
     },
     age: {
@@ -92,9 +92,9 @@ userSchema.static("hashPassword", async function (plainPassword: string) {
 // Pre hook and post hook middleware
 
 // pre hook - document middleware
-userSchema.pre("save", async function (next: any) {
+userSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, 10);
-  next();
+  // next();
 });
 
 // pre hook - query middleware
