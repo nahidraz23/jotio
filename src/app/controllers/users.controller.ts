@@ -15,7 +15,24 @@ const CreateUserZodSchema = z.object({
 });
 
 userRoutes.get("/", async (req: Request, res: Response) => {
-  const user = await User.find();
+  const userEmail = req.query.email;
+  let user = []
+
+  // filering
+  if(userEmail) {
+    user = await User.find({email : userEmail});
+  } else {
+    user = await User.find();
+  }
+
+  // sorting
+  // user = await User.find().sort({"age" : -1})
+
+  // skipping
+  // user = await User.find().skip(2)
+
+  // limitting
+  // user = await User.find().limit(2)
 
   res.status(201).json({
     success: true,
